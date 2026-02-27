@@ -11,10 +11,14 @@ export default function StartGameScreen() {
         autoCapitalize="none"
         autoCorrect={false}
       />
-      {/* <View> */}
-      <PrimaryButton>Reset</PrimaryButton>
-      <PrimaryButton>Confirm</PrimaryButton>
-      {/* </View> */}
+      <View style={styles.buttonsContainer}>
+        <View style={styles.buttonContainer}>
+          <PrimaryButton>Reset</PrimaryButton>
+        </View>
+        <View style={styles.buttonContainer}>
+          <PrimaryButton>Confirm</PrimaryButton>
+        </View>
+      </View>
     </View>
   )
 }
@@ -23,7 +27,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     padding: 16,
     marginTop: 100,
-    backgroundColor: "#72063c",
+    backgroundColor: "#50042a",
     marginHorizontal: 24,
     borderRadius: 8,
     elevation: 4, // Android shadow
@@ -31,16 +35,29 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 }, // iOS shadow
     shadowRadius: 6, // iOS shadow
     shadowOpacity: 0.25, // iOS shadow
+    alignItems: "center",
   },
   numberInput: {
-    height: 50,
-    width: 50,
-    fontSize: 32,
+    height: 56,
+    width: 56,
+    fontSize: 28,
+    lineHeight: 32,
     borderBottomColor: "#ddb52f",
     borderBottomWidth: 2,
     color: "#ddb52f",
     marginVertical: 8,
     fontWeight: "bold",
     textAlign: "center",
+    textAlignVertical: "center",
+  },
+  buttonsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: 16,
+  },
+  buttonContainer: {
+    flex: 1,
+    alignItems: "center",
   },
 })
