@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     padding: 16,
     marginTop: 100,
-    backgroundColor: "#50042a",
+    backgroundColor: "#3f0421",
     marginHorizontal: 24,
     borderRadius: 8,
     elevation: 4, // Android shadow
