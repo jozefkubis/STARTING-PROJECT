@@ -11,11 +11,13 @@ export default function NumberContainer({ children }) {
 
 const styles = StyleSheet.create({
   numberContainer: {
+    minWidth: 140,
     borderWidth: 4,
     borderColor: Colors.accent500,
-    padding: 24,
-    borderRadius: 8,
-    margin: 24,
+    paddingVertical: 18,
+    paddingHorizontal: 24,
+    borderRadius: 16,
+    marginVertical: 24,
     alignItems: "center",
     justifyContent: "center",
   },

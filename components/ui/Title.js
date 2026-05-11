@@ -7,14 +7,17 @@ export default function Title({ children }) {
 
 const styles = StyleSheet.create({
   title: {
-    fontSize: 24,
+    width: "100%",
+    maxWidth: 360,
+    fontSize: 28,
     fontWeight: "bold",
     color: Colors.white,
     textAlign: "center",
-    marginBottom: 24,
+    marginBottom: 20,
     borderWidth: 2,
     borderColor: Colors.white,
     padding: 12,
-    borderRadius: 8,
+    borderRadius: 14,
+    alignSelf: "center",
   },
 });

@@ -21,20 +21,21 @@ export default function PrimaryButton({ children, onPress }) {
 
 const styles = StyleSheet.create({
   buttonOutterConstainer: {
-    borderRadius: 28,
+    borderRadius: 14,
     margin: 4,
     overflow: "hidden", // to ensure the ripple effect is contained within the button
     width: "100%",
   },
   buttonInnerConstainer: {
     backgroundColor: Colors.primary500,
-    paddingVertical: 8,
+    paddingVertical: 12,
     paddingHorizontal: 16,
     elevation: 4, // Android shadow
   },
   buttonText: {
     color: Colors.white,
-    fontSize: 18,
+    fontSize: 17,
+    fontWeight: "700",
     textAlign: "center",
   },
   pressed: {

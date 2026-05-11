@@ -1,9 +1,11 @@
-import { useState } from "react";
-import { Alert, StyleSheet, Text, View } from "react-native";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { useEffect, useRef, useState } from "react";
+import { Alert, StyleSheet, View } from "react-native";
 import NumberContainer from "../components/game/NumberContainer";
+import Card from "../components/ui/Card";
+import InstructionsText from "../components/ui/InstructionsText";
 import PrimaryButton from "../components/ui/PrimaryButton";
 import Title from "../components/ui/Title";
-import Colors from "../constans/colors";
 
 function generateRandomBetween(min, max, exclude) {
   const rndNum = Math.floor(Math.random() * (max - min)) + min;
@@ -18,13 +20,22 @@ function generateRandomBetween(min, max, exclude) {
 let minBoundary = 1;
 let maxBoundary = 100;
 
-export default function GameScreen({ userNumber }) {
-  const initialGuess = generateRandomBetween(
-    minBoundary,
-    maxBoundary,
-    userNumber,
-  );
-  const [currentGuess, setCurrentGuess] = useState(initialGuess);
+export default function GameScreen({ userNumber, onGameOver }) {
+  const initialGuess = useRef();
+
+  if (!initialGuess.current) {
+    minBoundary = 1;
+    maxBoundary = 100;
+    initialGuess.current = generateRandomBetween(1, 100, userNumber);
+  }
+
+  const [currentGuess, setCurrentGuess] = useState(initialGuess.current);
+
+  useEffect(() => {
+    if (currentGuess === userNumber) {
+      onGameOver();
+    }
+  }, [currentGuess, userNumber, onGameOver]);
 
   function nextGuessHandler(direction) {
     if (currentGuess === userNumber) {
@@ -47,11 +58,6 @@ export default function GameScreen({ userNumber }) {
       minBoundary = currentGuess + 1;
     }
 
-    if (minBoundary >= maxBoundary) {
-      setCurrentGuess(userNumber);
-      return;
-    }
-
     const newRndNumber = generateRandomBetween(
       minBoundary,
       maxBoundary,
@@ -61,40 +67,54 @@ export default function GameScreen({ userNumber }) {
   }
 
   return (
-    <View style={styles.screen}>
+    <View style={styles.rootContainer}>
       <Title>Opponent's Guess</Title>
       <NumberContainer>{currentGuess}</NumberContainer>
-      <View>
-        <Text>Higher or Lower?</Text>
-        <View>
-          <PrimaryButton onPress={nextGuessHandler.bind(this, "higher")}>
-            +
-          </PrimaryButton>
-          <PrimaryButton onPress={nextGuessHandler.bind(this, "lower")}>
-            -
-          </PrimaryButton>
+      <Card style={styles.controlsCard}>
+        <InstructionsText>Higher or Lower?</InstructionsText>
+        <View style={styles.buttonsContainer}>
+          <View style={styles.buttonContainer}>
+            <PrimaryButton onPress={nextGuessHandler.bind(this, "higher")}>
+              <Ionicons name="add" size={24} color="white" />
+            </PrimaryButton>
+          </View>
+          <View style={styles.buttonContainer}>
+            <PrimaryButton onPress={nextGuessHandler.bind(this, "lower")}>
+              <Ionicons name="remove" size={24} color="white" />
+            </PrimaryButton>
+          </View>
         </View>
-      </View>
-      <View>
-        <Text>LOG ROUNDS</Text>
+      </Card>
+      <View style={styles.logContainer}>
+        <InstructionsText>LOG ROUNDS</InstructionsText>
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: {
+  rootContainer: {
     flex: 1,
-    padding: 16,
-    marginTop: 100,
-    backgroundColor: Colors.primary900,
-    marginHorizontal: 24,
-    borderRadius: 8,
-    elevation: 4, // Android shadow
-    shadowColor: Colors.black, // iOS shadow
-    shadowOffset: { width: 0, height: 2 }, // iOS shadow
-    shadowRadius: 6, // iOS shadow
-    shadowOpacity: 0.25, // iOS shadow
+    paddingHorizontal: 24,
+    paddingTop: 24,
+    alignItems: "center",
+  },
+  controlsCard: {
+    gap: 20,
+  },
+  buttonsContainer: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: 16,
+  },
+  buttonContainer: {
+    flex: 1,
+    alignItems: "center",
+  },
+  logContainer: {
+    marginTop: 24,
     alignItems: "center",
   },
 });
