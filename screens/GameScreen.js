@@ -1,11 +1,12 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useEffect, useRef, useState } from "react";
-import { Alert, StyleSheet, View } from "react-native";
+import { Alert, FlatList, StyleSheet, Text, View } from "react-native";
 import NumberContainer from "../components/game/NumberContainer";
 import Card from "../components/ui/Card";
 import InstructionsText from "../components/ui/InstructionsText";
 import PrimaryButton from "../components/ui/PrimaryButton";
 import Title from "../components/ui/Title";
+import Colors from "../constans/colors";
 
 function generateRandomBetween(min, max, exclude) {
   const rndNum = Math.floor(Math.random() * (max - min)) + min;
@@ -30,12 +31,18 @@ export default function GameScreen({ userNumber, onGameOver }) {
   }
 
   const [currentGuess, setCurrentGuess] = useState(initialGuess.current);
+  const [guessRounds, setGuessRounds] = useState([initialGuess.current]);
 
   useEffect(() => {
     if (currentGuess === userNumber) {
       onGameOver();
     }
   }, [currentGuess, userNumber, onGameOver]);
+
+  useEffect(() => {
+    minBoundary = 1;
+    maxBoundary = 100;
+  }, []);
 
   function nextGuessHandler(direction) {
     if (currentGuess === userNumber) {
@@ -64,6 +71,7 @@ export default function GameScreen({ userNumber, onGameOver }) {
       currentGuess,
     );
     setCurrentGuess(newRndNumber);
+    setGuessRounds((prevGuessRounds) => [newRndNumber, ...prevGuessRounds]);
   }
 
   return (
@@ -86,7 +94,20 @@ export default function GameScreen({ userNumber, onGameOver }) {
         </View>
       </Card>
       <View style={styles.logContainer}>
-        <InstructionsText>LOG ROUNDS</InstructionsText>
+        {/* {guessRounds.map((guessRound) => (
+          <View key={guessRound} style={styles.logItem}>
+            <Text>{guessRound}</Text>
+          </View>
+        ))} */}
+        <FlatList
+          data={guessRounds}
+          renderItem={(itemData) => (
+            <View style={styles.logItem}>
+              <Text>{itemData.item}</Text>
+            </View>
+          )}
+          keyExtractor={(item) => item.toString()}
+        />
       </View>
     </View>
   );
@@ -116,5 +137,12 @@ const styles = StyleSheet.create({
   logContainer: {
     marginTop: 24,
     alignItems: "center",
+  },
+  logItem: {
+    borderColor: Colors.accent500,
+    borderWidth: 1,
+    padding: 8,
+    marginVertical: 4,
+    borderRadius: 4,
   },
 });
