@@ -1,12 +1,12 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useEffect, useRef, useState } from "react";
-import { Alert, FlatList, StyleSheet, Text, View } from "react-native";
+import { Alert, FlatList, StyleSheet, View } from "react-native";
+import GuessLogItem from "../components/game/GuessLogItem";
 import NumberContainer from "../components/game/NumberContainer";
 import Card from "../components/ui/Card";
 import InstructionsText from "../components/ui/InstructionsText";
 import PrimaryButton from "../components/ui/PrimaryButton";
 import Title from "../components/ui/Title";
-import Colors from "../constans/colors";
 
 function generateRandomBetween(min, max, exclude) {
   const rndNum = Math.floor(Math.random() * (max - min)) + min;
@@ -35,7 +35,7 @@ export default function GameScreen({ userNumber, onGameOver }) {
 
   useEffect(() => {
     if (currentGuess === userNumber) {
-      onGameOver();
+      onGameOver(guessRounds.length);
     }
   }, [currentGuess, userNumber, onGameOver]);
 
@@ -74,6 +74,8 @@ export default function GameScreen({ userNumber, onGameOver }) {
     setGuessRounds((prevGuessRounds) => [newRndNumber, ...prevGuessRounds]);
   }
 
+  const guessRoundsLength = guessRounds.length;
+
   return (
     <View style={styles.rootContainer}>
       <Title>Opponent's Guess</Title>
@@ -102,9 +104,10 @@ export default function GameScreen({ userNumber, onGameOver }) {
         <FlatList
           data={guessRounds}
           renderItem={(itemData) => (
-            <View style={styles.logItem}>
-              <Text>{itemData.item}</Text>
-            </View>
+            <GuessLogItem
+              roundNumber={guessRoundsLength - itemData.index}
+              guess={itemData.item}
+            />
           )}
           keyExtractor={(item) => item.toString()}
         />
@@ -135,14 +138,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   logContainer: {
+    flex: 1,
     marginTop: 24,
-    alignItems: "center",
+    width: "100%",
+    padding: 16,
   },
-  logItem: {
-    borderColor: Colors.accent500,
-    borderWidth: 1,
-    padding: 8,
-    marginVertical: 4,
-    borderRadius: 4,
-  },
+  // logItem: {
+  //   borderColor: Colors.accent500,
+  //   borderWidth: 1,
+  //   padding: 8,
+  //   marginVertical: 4,
+  //   borderRadius: 4,
+  // },
 });
