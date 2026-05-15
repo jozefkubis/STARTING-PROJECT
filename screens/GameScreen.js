@@ -1,6 +1,12 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useEffect, useRef, useState } from "react";
-import { Alert, FlatList, StyleSheet, View } from "react-native";
+import {
+  Alert,
+  FlatList,
+  StyleSheet,
+  View,
+  useWindowDimensions,
+} from "react-native";
 import GuessLogItem from "../components/game/GuessLogItem";
 import NumberContainer from "../components/game/NumberContainer";
 import Card from "../components/ui/Card";
@@ -32,6 +38,8 @@ export default function GameScreen({ userNumber, onGameOver }) {
 
   const [currentGuess, setCurrentGuess] = useState(initialGuess.current);
   const [guessRounds, setGuessRounds] = useState([initialGuess.current]);
+
+  const { width, height } = useWindowDimensions();
 
   useEffect(() => {
     if (currentGuess === userNumber) {
@@ -76,9 +84,8 @@ export default function GameScreen({ userNumber, onGameOver }) {
 
   const guessRoundsLength = guessRounds.length;
 
-  return (
-    <View style={styles.rootContainer}>
-      <Title>Opponent's Guess</Title>
+  let content = (
+    <>
       <NumberContainer>{currentGuess}</NumberContainer>
       <Card style={styles.controlsCard}>
         <InstructionsText>Higher or Lower?</InstructionsText>
@@ -95,7 +102,39 @@ export default function GameScreen({ userNumber, onGameOver }) {
           </View>
         </View>
       </Card>
-      <View style={styles.logContainer}>
+    </>
+  );
+
+  if (width > 500) {
+    content = (
+      <>
+        {/* <InstructionsText>Higher or Lower?</InstructionsText> */}
+        {/* <Card style={styles.controlsCard}> */}
+        <View style={styles.buttonsContainerWide}>
+          <View style={styles.buttonContainer}>
+            <PrimaryButton onPress={nextGuessHandler.bind(this, "higher")}>
+              <Ionicons name="add" size={24} color="white" />
+            </PrimaryButton>
+          </View>
+          <NumberContainer>{currentGuess}</NumberContainer>
+          <View style={styles.buttonContainer}>
+            <PrimaryButton onPress={nextGuessHandler.bind(this, "lower")}>
+              <Ionicons name="remove" size={24} color="white" />
+            </PrimaryButton>
+          </View>
+        </View>
+        {/* </Card> */}
+      </>
+    );
+  }
+
+  const marginTopDistance = width > 380 ? 9 : 24;
+
+  return (
+    <View style={styles.rootContainer}>
+      <Title>Opponent's Guess</Title>
+      {content}
+      <View style={[styles.logContainer, { marginTop: marginTopDistance }]}>
         {/* {guessRounds.map((guessRound) => (
           <View key={guessRound} style={styles.logItem}>
             <Text>{guessRound}</Text>
@@ -139,9 +178,13 @@ const styles = StyleSheet.create({
   },
   logContainer: {
     flex: 1,
-    marginTop: 24,
     width: "100%",
     padding: 16,
+  },
+  buttonsContainerWide: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 16,
   },
   // logItem: {
   //   borderColor: Colors.accent500,
